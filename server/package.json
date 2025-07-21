@@ -12,6 +12,7 @@
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@langchain/google-genai": "^0.2.15",
     "@types/express": "^5.0.3",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
