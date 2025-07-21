@@ -6,8 +6,9 @@ This repository contains the backend server for a Retrieval-Augmented Generation
 
 This project uses a RAG pipeline orchestrated by LangChain. On startup, the server ingests, chunks, and embeds a PDF document into an in-memory vector store. The API endpoint then uses this store to retrieve relevant context and generate precise answers to user questions.
 
-**[➡️ Click here to view the interactive diagram on Eraser.io]([https://app.eraser.io/workspace/...](https://app.eraser.io/workspace/jBow2tkBIyjKzLfUmsLb?origin=share))** 
-_**(Note: Replace this with your public Eraser.io share link)**_
+[➡️ Click here to view the interactive diagram on Eraser.io]
+
+https://app.eraser.io/workspace/jBow2tkBIyjKzLfUmsLb?origin=share
 
 
 
