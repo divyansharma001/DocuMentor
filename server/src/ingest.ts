@@ -29,6 +29,7 @@ export const embedPdf = async () => {
 
     const vectorStore = await MemoryVectorStore.fromDocuments(docs, embeddings);
 
+    return vectorStore;
 };
 
 
