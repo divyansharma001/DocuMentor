@@ -1,4 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
 import Header from "./Header";
 import ProductPreview from "./ProductPreview";
 import FloatingElements from "./FloatingElements";
@@ -6,7 +11,95 @@ import RAGArchitectureSection from "./RAGArchitectureSection";
 import Features from "./Features";
 import Footer from "./Footer";
 
+interface Message {
+  id: string;
+  type: "user" | "assistant";
+  content: string;
+  timestamp: Date;
+}
+
 const HeroSection = () => {
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "1",
+      type: "assistant",
+      content: "Hello! I'm ready to answer questions about the document. What would you like to know?",
+      timestamp: new Date()
+    }
+  ]);
+  const [question, setQuestion] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const sendQuestion = async () => {
+    if (!question.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      type: "user",
+      content: question,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setQuestion("");
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch("http://localhost:3000/ask", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question: userMessage.content }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "assistant",
+        content: data.answer,
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "assistant",
+        content: "Sorry, I encountered an error. Please make sure the server is running on localhost:3000.",
+        timestamp: new Date()
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendQuestion();
+    }
+  };
+
+  const quickQuestions = [
+    "What are Divyansh's key skills?",
+    "What projects has he worked on?",
+    "What is his experience?",
+    "What technologies does he know?"
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       <FloatingElements />
@@ -36,17 +129,19 @@ const HeroSection = () => {
           </div>
           
           {/* CTA Button */}
-          <Button 
-            className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-inter"
-          >
-            Try DocuMentor
-          </Button>
+          <Link to="/chat">
+            <Button 
+              className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 font-inter"
+            >
+              Try DocuMentor
+            </Button>
+          </Link>
         </div>
         
         {/* Right Content - AI Document Processing Interface */}
         <div className="flex-1 relative">
           <div className="relative max-w-lg mx-auto">
-            {/* Main AI Chat Dialog */}
+            {/* Main AI Chat Dialog - Preview Only */}
             <div className="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100">
               {/* Dialog Header */}
               <div className="flex items-center justify-between mb-6">
@@ -67,12 +162,12 @@ const HeroSection = () => {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900 font-inter">hireDivyanshSharma.pdf</p>
-                    <p className="text-xs text-gray-500 font-inter">Processed • 2.4 MB • 15 pages</p>
+                    <p className="text-xs text-gray-500 font-inter">Processed • Ready for questions</p>
                   </div>
                 </div>
               </div>
               
-              {/* Chat Messages */}
+              {/* Preview Chat Messages */}
               <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
                 <div className="flex justify-end">
                   <div className="bg-blue-600 text-white p-3 rounded-lg max-w-xs text-sm font-inter">
@@ -81,7 +176,7 @@ const HeroSection = () => {
                 </div>
                 <div className="flex justify-start">
                   <div className="bg-gray-100 text-gray-900 p-3 rounded-lg max-w-xs text-sm font-inter">
-                    Based on the document, Divyansh is a Full Stack Developer with expertise in React, Node.js, Python, and AI/ML. He has 3+ years of experience and has worked on several projects including...
+                    Based on the document, Divyansh is a Full Stack Developer with expertise in React, Node.js, Python, and AI/ML. He has 3+ years of experience...
                   </div>
                 </div>
                 <div className="flex justify-end">
@@ -91,14 +186,12 @@ const HeroSection = () => {
                 </div>
               </div>
               
-              {/* Input Field */}
+              {/* Preview Input Field */}
               <div className="flex space-x-2">
-                <input 
-                  type="text" 
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-inter"
-                  placeholder="Ask anything about this document..."
-                />
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                <div className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm font-inter bg-gray-50 text-gray-500">
+                  Try the live demo below...
+                </div>
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700" disabled>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                   </svg>

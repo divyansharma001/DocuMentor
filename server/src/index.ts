@@ -1,11 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import { initAgent } from "./agent";
-
+import cors from "cors";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:3000", "http://localhost:8080"],
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 
 let chain: any;
 

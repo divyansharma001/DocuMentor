@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
     <header className="w-full px-6 py-6 relative z-20">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center space-x-2">
+        <Link to="/" className="flex items-center space-x-2">
           <div className="relative">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -17,19 +18,19 @@ const Header = () => {
           <span className="text-2xl font-bold text-gray-900 font-inter">
             DocuMentor
           </span>
-        </div>
+        </Link>
         
         {/* Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
             Features
           </a>
-          <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
-            How it Works
-          </a>
-          <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
+          <Link to="/chat" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
+            Chat
+          </Link>
+          <Link to="/api-docs" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
             API
-          </a>
+          </Link>
           <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors font-medium font-inter">
             Pricing
           </a>
@@ -40,9 +41,11 @@ const Header = () => {
           <Button variant="ghost" className="text-gray-600 hover:text-gray-900 font-medium font-inter">
             Sign In
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold font-inter shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            Get Started
-          </Button>
+          <Link to="/chat">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold font-inter shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              Get Started
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
