@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/ingest.ts"
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --env-file .env src/index.ts",
+    "start": "ts-node src/index.ts",
+    "test:api": "curl -X POST http://localhost:3000/ask -H 'Content-Type: application/json' -d '{\"question\":\"What is the main topic of the PDF?\"}'"
   },
   "keywords": [],
   "author": "",

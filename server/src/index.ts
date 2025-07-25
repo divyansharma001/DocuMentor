@@ -2,14 +2,12 @@ import express from "express";
 import dotenv from "dotenv";
 import { initAgent } from "./agent";
 
-
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
 let chain: any;
-
 
 (async () => {
   chain = await initAgent();
