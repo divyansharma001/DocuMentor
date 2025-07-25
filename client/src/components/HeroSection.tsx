@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import Header from "./Header";
 import ProductPreview from "./ProductPreview";
 import FloatingElements from "./FloatingElements";
+import RAGArchitectureSection from "./RAGArchitectureSection";
+import Features from "./Features";
+import Footer from "./Footer";
 
 const HeroSection = () => {
   return (
@@ -149,6 +152,15 @@ const HeroSection = () => {
           </div>
         </div>
       </section>
+      
+      {/* Features Section */}
+      <Features />
+      
+      {/* RAG Architecture Section - Commented out */}
+      {/* <RAGArchitectureSection /> */}
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
